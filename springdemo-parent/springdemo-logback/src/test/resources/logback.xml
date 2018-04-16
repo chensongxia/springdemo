@@ -1,0 +1,81 @@
+
+<configuration debug="true" scan="true" scanPeriod="5 seconds" packagingData="true">
+
+    <contextName>myAppName</contextName>
+
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth"/>
+
+    <property name="USER_HOME" value="/home/sebastien" />
+    <!--在classpath下-->
+    <property resource="logback.properties" />
+    <!--全路径-->
+    <!--<property file="src/main/resources/xx.properties" />-->
+
+    <!--正确释放资源-->
+    <shutdownHook/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <target>System.out</target>
+        <!-- 支持字体颜色 -->
+        <!--<withJansi>true</withJansi>-->
+        <immediateFlush>true</immediateFlush>
+    </appender>
+
+    <!--普通文件，用的比较少-->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!--在tomcat中运行，${user.dir}指向tomcat的bin目录-->
+        <file>${user.dir}/logs/myApp.log</file>
+        <!--<file>logs/myxxApp.log</file>-->
+        <append>true</append>
+        <immediateFlush>true</immediateFlush>
+        <!--建议使用false模式,参考http://blog.csdn.net/huozhonbin/article/details/12560617-->
+        <!--将prudent属性设置为true，表示线程安全的写入，这样效率会比较低-->
+        <!--还有一般情况下，一个文件应该只用一个appender向其写入日志-->
+        <prudent>false</prudent>
+        <!--<bufferSize></bufferSize>-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--每日滚动的日志，常用这种形式进行输出-->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果是在tomcat下运行的话在tomcat的bin目录下-->
+        <file>${user.dir}/logs/applog.log</file>
+        <append>true</append>
+        <prudent>false</prudent>
+        <!--将这个值设置为false，日志会有8K的缓存，不会立马输出，缓存满了才会输出-->
+        <!--但是这种方式可能会有日志丢失的危险-->
+        <immediateFlush>false</immediateFlush>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--支持压缩日志文件节省空间，只需要将后缀改为zip或gz即可-->
+            <fileNamePattern>${user.dir}/logs/applog.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.csx.demo" level="INFO" additivity="false" >
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING_FILE" />
+    </logger>
+
+    <!-- root 标签只有一个属相level -->
+    <!--looger标签有三个属性name level additivity-->
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING_FILE" />
+    </root>
+</configuration>

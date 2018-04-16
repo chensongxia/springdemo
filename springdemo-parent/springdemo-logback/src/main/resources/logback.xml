@@ -1,0 +1,76 @@
+<!--<configuration>-->
+    <!--<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />-->
+    <!--... the rest of the configuration file-->
+<!--</configuration>-->
+
+<!--占位符-->
+<!--logback也支持占位符取变量，取变量的顺序是先从指定的配置文件中查找，再从context中-->
+<!--查找，再从JVM中查找，最后从系统变量中查找 可以指定scope属性让logback去哪查找-->
+<configuration debug="true" scan="true" scanPeriod="5 seconds" packagingData="true">
+
+    <contextName>myAppName</contextName>
+
+    <property name="USER_HOME" value="/home/sebastien" />
+    <!--全路径-->
+    <property file="src/main/resources/xx.properties" />
+    <!--在classpath下-->
+    <property resource="xx.properties" />
+
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L -ff %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <target>System.out</target>
+        <!-- 支持字体颜色 -->
+        <!--<withJansi>true</withJansi>-->
+        <immediateFlush>true</immediateFlush>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <!--在tomcat中运行，${user.dir}指向tomcat的bin目录-->
+        <file>${user.dir}/logs/myApp.log</file>
+        <!--<file>logs/myxxApp.log</file>-->
+        <append>true</append>
+        <immediateFlush>true</immediateFlush>
+        <!--建议使用false模式,参考http://blog.csdn.net/huozhonbin/article/details/12560617-->
+        <!--将prudent属性设置为true，表示线程安全的写入，这样效率会比较低-->
+        <!--还有一般情况下，一个文件应该只用一个appender向其写入日志-->
+        <prudent>false</prudent>
+        <!--<bufferSize></bufferSize>-->
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L -ff %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--每日滚动的日志-->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--如果是在tomcat下运行的话在tomcat的bin目录下-->
+        <file>mylog.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>mylog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L -ff %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.csx.demo" level="INFO" additivity="ture" >
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <!-- root 标签只有一个属相level -->
+    <!--looger标签有三个属性name level additivity-->
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING_FILE" />
+    </root>
+</configuration>

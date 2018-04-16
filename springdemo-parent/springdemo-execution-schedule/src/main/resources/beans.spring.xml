@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd">
+    <!--default-init-method="init">-->
+
+    <context:component-scan base-package="com.csx.demo.springdemo.*" annotation-config="true">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--相当于配置了一个线程池-->
+    <!--等待队列的长度最好设大一点,不然线程池中线程全忙时,会抛出任务拒绝异常 -->
+    <!--当所有线程卡死时,还是会排除任务拒绝异常，这种情况下只能重启应用。但是这样的话没执行的任务就会丢失-->
+    <!--对于这种情况建议使用MQ技术-->
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5"/>
+        <property name="maxPoolSize" value="50"/>
+        <property name="queueCapacity" value="1000"/>
+    </bean>
+
+    <!--推荐在父上下文中配置-->
+    <!--task:annotation-driven的作用是开启注解扫描,子上下文中也需要开启-->
+    <!--executor和scheduler只需要在父上下文中配置就好了 子上下文中不需要配置了-->
+    <task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
+    <task:executor id="myExecutor" pool-size="10" queue-capacity="100"/>
+    <!--定时器的队列长度应该是无限大，这个设计还是合理的-->
+    <task:scheduler id="myScheduler" pool-size="10"/>
+
+</beans>
