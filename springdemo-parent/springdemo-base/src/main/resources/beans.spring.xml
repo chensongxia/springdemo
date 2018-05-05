@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd">
+    <!--default-init-method="init">-->
+
+    <!--通过普通构造函数实例化bean-->
+    <bean id="serviceA" class="com.csx.demo.springdemo.service.ServiceA" lazy-init="true" scope="singleton"/>
+    <!--通过工厂方法实例化bean-->
+    <bean id="serviceFactory" class="com.csx.demo.springdemo.factory.ServiceFactory"/>
+    <bean id="serviceA_factory" factory-bean="serviceFactory" factory-method="getServiceA"/>
+    <bean id="serviceB_factory" factory-bean="serviceFactory" factory-method="getServiceB" />
+
+    <bean id="serviceC" class="com.csx.demo.springdemo.service.ServiceC">
+        <lookup-method bean="serviceD" name="createService"/>
+    </bean>
+    <bean id="serviceD" class="com.csx.demo.springdemo.service.ServiceD" scope="prototype"/>
+
+
+    <util:map id="myMap" key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="key1" value="chen"/>
+        <entry key="key2" value="zhao"/>
+    </util:map>
+
+    <util:list id="myList" value-type="java.lang.String">
+        <value>chen</value>
+        <value>zhao</value>
+    </util:list>
+
+    <util:set id="mySet" value-type="java.lang.String" scope="singleton">
+        <value>chen</value>
+        <value>zhao</value>
+    </util:set>
+
+
+    <!--给bean设置别名-->
+    <alias name="serviceA" alias="serviceA_alise"/>
+</beans>

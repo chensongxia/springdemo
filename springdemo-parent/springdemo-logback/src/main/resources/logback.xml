@@ -1,26 +1,22 @@
-<!--<configuration>-->
-    <!--<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />-->
-    <!--... the rest of the configuration file-->
-<!--</configuration>-->
 
-<!--占位符-->
-<!--logback也支持占位符取变量，取变量的顺序是先从指定的配置文件中查找，再从context中-->
-<!--查找，再从JVM中查找，最后从系统变量中查找 可以指定scope属性让logback去哪查找-->
 <configuration debug="true" scan="true" scanPeriod="5 seconds" packagingData="true">
 
     <contextName>myAppName</contextName>
 
-    <property name="USER_HOME" value="/home/sebastien" />
-    <!--全路径-->
-    <property file="src/main/resources/xx.properties" />
-    <!--在classpath下-->
-    <property resource="xx.properties" />
-
     <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth"/>
+
+    <property name="USER_HOME" value="/home/sebastien" />
+    <!--在classpath下-->
+    <property resource="logback.properties" />
+    <!--全路径-->
+    <!--<property file="src/main/resources/xx.properties" />-->
+
+    <!--正确释放资源-->
+    <shutdownHook/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L -ff %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
         <target>System.out</target>
@@ -29,6 +25,7 @@
         <immediateFlush>true</immediateFlush>
     </appender>
 
+    <!--普通文件，用的比较少-->
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <!--在tomcat中运行，${user.dir}指向tomcat的bin目录-->
         <file>${user.dir}/logs/myApp.log</file>
@@ -41,29 +38,37 @@
         <prudent>false</prudent>
         <!--<bufferSize></bufferSize>-->
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L -ff %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
 
-    <!--每日滚动的日志-->
+    <!--每日滚动的日志，常用这种形式进行输出-->
     <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--如果是在tomcat下运行的话在tomcat的bin目录下-->
-        <file>mylog.log</file>
+        <file>${user.dir}/logs/applog.log</file>
+        <append>true</append>
+        <prudent>false</prudent>
+        <!--将这个值设置为false，日志会有8K的缓存，不会立马输出，缓存满了才会输出-->
+        <!--但是这种方式可能会有日志丢失的危险-->
+        <immediateFlush>false</immediateFlush>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>mylog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--支持压缩日志文件节省空间，只需要将后缀改为zip或gz即可-->
+            <fileNamePattern>${user.dir}/logs/applog.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
             <maxFileSize>5MB</maxFileSize>
             <maxHistory>30</maxHistory>
             <totalSizeCap>20GB</totalSizeCap>
         </rollingPolicy>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%L -ff %msg%n</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
     </appender>
 
-    <logger name="com.csx.demo" level="INFO" additivity="ture" >
+    <logger name="com.csx.demo" level="INFO" additivity="false" >
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING_FILE" />
     </logger>
 
     <!-- root 标签只有一个属相level -->
