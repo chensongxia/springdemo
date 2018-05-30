@@ -1,5 +1,5 @@
 
-<configuration debug="false" scan="true" scanPeriod="5 seconds" packagingData="true">
+<configuration debug="true" scan="true" scanPeriod="5 seconds" packagingData="true">
 
     <contextName>springboot</contextName>
     <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth"/>
@@ -71,7 +71,7 @@
 
     <!-- root 标签只有一个属相level -->
     <!--looger标签有三个属性name level additivity-->
-    <root level="debug">
+    <root level="info">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="ROLLING_FILE"/>
     </root>
