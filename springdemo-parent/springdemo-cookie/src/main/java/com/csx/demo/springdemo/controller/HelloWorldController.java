@@ -2,6 +2,7 @@ package com.csx.demo.springdemo.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -14,9 +15,10 @@ public class HelloWorldController {
 
     @RequestMapping("/world")
     @ResponseBody
+
     public String helloWorld(){
         log.info("hello world... l am a controller.");
-        return "hello...";
+        return "hello";
     }
 
 }

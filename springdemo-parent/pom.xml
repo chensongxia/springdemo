@@ -12,7 +12,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <spring.version>4.3.7.RELEASE</spring.version>
+        <spring.version>5.1.2.RELEASE</spring.version>
         <logback.version>1.1.11</logback.version>
         <slf4j.version>1.7.25</slf4j.version>
     </properties>
@@ -28,7 +28,7 @@
             </activation>
         </profile>
         <profile>
-            <id>uat</id>
+            <id>stg</id>
             <properties>
                 <log4jLogFile>log4j_uat.log</log4jLogFile>
             </properties>
@@ -42,6 +42,7 @@
     </profiles>
 
     <modules>
+        <module>springdemo-cookie</module>
         <module>springdemo-base</module>
         <module>springdemo-logback</module>
         <module>springdemo-log4j</module>
@@ -54,7 +55,6 @@
 
     <dependencyManagement>
         <dependencies>
-
             <!--<dependency>-->
                 <!--<groupId>io.spring.platform</groupId>-->
                 <!--<artifactId>platform-bom</artifactId>-->
@@ -151,80 +151,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-test</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-core</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-beans</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-context</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-aop</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-expression</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-web</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-webmvc</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-tx</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-jdbc</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-context-support</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-websocket</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-                <!--<groupId>org.springframework</groupId>-->
-                <!--<artifactId>spring-messaging</artifactId>-->
-                <!--<version>${spring.version}</version>-->
-            <!--</dependency>-->
-
             <!--dubbo相关-->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>dubbo</artifactId>
                 <version>2.5.7</version>
             </dependency>
-
             <!-- Servlet API相关 -->
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -232,14 +164,12 @@
                 <version>3.0-alpha-1</version>
                 <scope>provided</scope>
             </dependency>
-
             <!--JSON相关-->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>1.2.24</version>
             </dependency>
-
             <!-- mybatis数据库相关 -->
             <dependency>
                 <groupId>org.mybatis</groupId>
@@ -263,6 +193,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
 </project>

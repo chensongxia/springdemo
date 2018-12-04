@@ -13,12 +13,20 @@
         http://www.springframework.org/schema/task
         http://www.springframework.org/schema/task/spring-task.xsd"
         default-init-method="init"
-        default-autowire="byType"
-        default-autowire-candidates="true">
+        default-destroy-method="destroy"
+        default-autowire="byType">
+        <!--建议不要配置下面这个属性-->
+        <!--default-autowire-candidates-->
 
-    <!--这些配置只对当前容器生效,不会对子类容器或者父类容器生效-->
+    <context:property-placeholder location="classpath:cookies.properties" file-encoding="UTF8"/>
+
+    <!--配置了componentScan,这个注解默认会开启-->
     <context:annotation-config/>
-    <context:component-scan base-package="com.csx.demo.springdemo.*">
+    <!--use-default-filters="true",默认值也是true,这个过滤器会扫描@Component, @Repository, @Service, @Controller, or @Configuration这些注解标注的类-->
+    <context:component-scan base-package="com.csx.demo.springdemo.cookies.*" use-default-filters="true">
+        <context:include-filter type="regex" expression=".*Stub.*Repository"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:exclude-filter type="assignable" expression="org.springframework.stereotype.Repository"/>
     </context:component-scan>
 
 </beans>
