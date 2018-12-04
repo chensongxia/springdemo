@@ -24,9 +24,9 @@
     <context:annotation-config/>
     <!--use-default-filters="true",默认值也是true,这个过滤器会扫描@Component, @Repository, @Service, @Controller, or @Configuration这些注解标注的类-->
     <context:component-scan base-package="com.csx.demo.springdemo.cookies.*" use-default-filters="true">
-        <context:include-filter type="regex" expression=".*Stub.*Repository"/>
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
-        <context:exclude-filter type="assignable" expression="org.springframework.stereotype.Repository"/>
+        <!--<context:include-filter type="regex" expression=".*Stub.*Repository"/>-->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>-->
+        <!--<context:exclude-filter type="assignable" expression="org.springframework.stereotype.Repository"/>-->
     </context:component-scan>
 
 </beans>
